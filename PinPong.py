@@ -29,6 +29,15 @@ class Ball(Main):
             self.rect.x -= self.speed
             if self.rect.x < 0:
                 self.hface="right" 
+        
+        if self.nface == "up":
+            self.rect.y -= self.speed
+            if self.rect.y < 0:
+                self.nface="down"
+        else:
+            self.rect.y += self.speed
+            if self.rect.y + self.n > h:
+                self.nface="up" 
         self.reset()
 
 ball=Ball(x=200,y=200,filename="Ball.png",speed = 30,v = 50,n = 50)

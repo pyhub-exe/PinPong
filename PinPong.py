@@ -23,13 +23,38 @@ class Main(sprite.Sprite):
         win.blit(self.image,( self.rect.x,self.rect.y))
 
 class Ball(Main):
+from pygame import *
+from random import random
+w=1366
+h=768
+q = 15
+a = 15
+
+class Main(sprite.Sprite):
+
+    def __init__(self,x,y,filename,speed,v,n):
+        self.image = image.load(filename)
+        self.image = transform.scale(self.image,(v,n))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.n = n
+        self.v = v
+        self.hface = "right"
+        self.nface = "up"
+        self.speed = speed
+
+    def reset(self):
+        win.blit(self.image,( self.rect.x,self.rect.y))
+
+class Ball(Main):
     def __init__(self,x,y,filename,speed,v,n):
         super().__init__(x,y,filename,speed,v,n)
         self.need_change_speed = False
         self.last_touch_racket = False
 
     def change_speed(self):
-        self.speed += 10
+        self.speed += 1
         self.need_change_speed = True
 
     def update(self):
@@ -90,6 +115,7 @@ class Racketka(Main):
             self.rect.y -= self.speed
         if keys[K_s]:
             self.rect.y += self.speed
+        
         self.reset()
 
 class Racketka1(Main):
@@ -114,9 +140,9 @@ class Racketka1(Main):
                 self.need_change_speed = False
 
         keys=key.get_pressed()
-        if keys[K_p]:
+        if keys[K_UP]:
             self.rect.y -= self.speed
-        if keys[K_l]:
+        if keys[K_DOWN]:
             self.rect.y += self.speed
         self.reset()
 
@@ -137,46 +163,22 @@ class Wall(sprite.Sprite):
             end_game = lose_text       
         self.reset()
 
-class Bird(Main):  
-    def update(self):
-        if self.hface == "right":
-            self.rect.x += self.speed
-            if self.rect.x + self.v > w:
-                self.hface="left"
-        else:
-            self.rect.x -= self.speed
-            if self.rect.x < 0:
-                self.hface="right" 
-        
-        if self.nface == "up":
-            self.rect.y -= self.speed
-            if self.rect.y < 0:
-                self.nface="down"
-        else:
-            self.rect.y += self.speed
-            if self.rect.y + self.n > h:
-                self.nface="up" 
-        if sprite.collide_rect(self,ball):
-            if ball.last_touch_racket == "right":
-                racketka_right.change_speed()
-            if ball.last_touch_racket == "left":
-                racketka_left.change_speed()
-                print("Ты попал")
+
 
 
         self.reset()
 
 ball = Ball(x= 200,y = 540,filename="Ball.png",speed = q,v = 50,n = 50)
 racketka_left = Racketka(x = 10,y=540,filename="racketka1.png",speed = a,v = 50,n = 160)
-racketka_right = Racketka1(x = 1860,y = 540,filename="racketka.png",speed = a,v = 50,n = 160)
-ptica = Bird(x= 200,y = 200,filename="Bird.png",speed = 5,v = 100,n = 100)
+racketka_right = Racketka1(x = 1165,y = 540,filename="racketka.png",speed = a,v = 50,n = 160)
+
 
 CornflowerBlue = (100,149,237)   
 DarkSlateBlue = (72,61,139)  
 PeachPuff = (255,218,185)   
 
 side_stena = Wall(0,0,1,1080,PeachPuff)     
-side_stena1 = Wall(1919,0,1,1080,PeachPuff)   
+side_stena1 = Wall(1366,0,1,1080,PeachPuff)   
 
 resolution = [w,h]
 
@@ -184,17 +186,18 @@ win = display.set_mode((resolution),flags = FULLSCREEN)
 display.set_caption("ПинПонг")
 
 timer = time.Clock()
-FPS = 60
+FPS = 40
 
 mixer.init()
-mixer.music.load("Music.mp3")
+mixer.music.load("3.mp3")
 mixer.music.play()
 
 fon=image.load("fon.png")
-
+w
 font.init()
 shirift = font.SysFont("Impact",148)
-lose_text = shirift.render("ТЫ ПРОИГРАЛ",False,DarkSlateBlue)
+
+lose_text = shirift.render("2 ИГРОК ПРОИГРАЛ",False,DarkSlateBlue)
 
 game = True
 end_game = False
@@ -210,11 +213,12 @@ while game:
 
     if end_game == False:
         ball.update() 
-        ptica.update() 
+      
         racketka_left.update()
         racketka_right.update()
         side_stena.update()
         side_stena1.update()
     if end_game == lose_text:
-        win.blit(lose_text,(800,500))
+        win.blit(lose_text,(200,200))
+        exit()
     display.update()
